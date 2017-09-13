@@ -7,7 +7,7 @@
 	</configSuffixes>
 	<enableImports><![CDATA[false]]></enableImports>
 	<configs>
-		<config>java:com.streaming.demo.SpringBootWebApplication</config>
+		<config>java:com.streaming.demo.configuration.SpringBootWebApplication</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>

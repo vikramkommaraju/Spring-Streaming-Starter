@@ -1,4 +1,4 @@
-package com.streaming.demo;
+package com.streaming.demo.component;
 
 import java.util.Date;
 

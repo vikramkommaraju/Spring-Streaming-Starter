@@ -1,4 +1,4 @@
-package com.streaming.demo;
+package com.streaming.demo.component;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

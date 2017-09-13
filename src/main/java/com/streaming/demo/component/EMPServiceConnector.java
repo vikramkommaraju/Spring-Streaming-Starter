@@ -1,4 +1,4 @@
-package com.streaming.demo;
+package com.streaming.demo.component;
 
 import static com.salesforce.emp.connector.LoginHelper.login;
 
@@ -28,6 +28,9 @@ public class EMPServiceConnector {
 	@Autowired
 	private ConfigurableApplicationContext ctx;
 	
+	@Autowired
+	DebugLogger logger;
+	
 	private BayeuxParameters params;
 	private EmpConnector connector;
 	private Future<TopicSubscription> topic;
@@ -38,7 +41,7 @@ public class EMPServiceConnector {
 			params = login(config.getUserName(), config.getPassword());
 			connector = new EmpConnector(params);
 		} catch (Exception e) {
-			System.out.println("Failed to login to the org! " + e.getMessage());
+			logger.log("Failed to login to the org! " + e.getMessage());
 			ctx.close();
 		}	
 	}

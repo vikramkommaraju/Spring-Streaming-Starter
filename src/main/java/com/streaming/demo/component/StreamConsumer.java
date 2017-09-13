@@ -1,4 +1,4 @@
-package com.streaming.demo;
+package com.streaming.demo.component;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -17,13 +17,16 @@ public class StreamConsumer implements Consumer<Map<String, Object>> {
 	@Autowired
 	RestService restService;
 	
+	@Autowired
+	DebugLogger logger;
+	
 	@Override
 	public void accept(Map<String, Object> message) {
 
 		JsonObject jsonResponse = streamParser.jsonify(message);
 		
 		if(streamParser.isAccountEntityQueried(jsonResponse)) {
-			System.out.println("Received API Event on Account!");
+			logger.log("Received API Event on Account!");
 			QueryAlert__C alert = streamParser.newAlert(jsonResponse);
 			restService.createQueryAlertCustomObject(alert);
 		}

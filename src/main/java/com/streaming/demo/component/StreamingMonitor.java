@@ -1,4 +1,4 @@
-package com.streaming.demo;
+package com.streaming.demo.component;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -23,15 +23,18 @@ public class StreamingMonitor {
 	StreamConfiguration config;
 	
 	@Autowired
+	DebugLogger logger;
+
+	@Autowired
 	private ConfigurableApplicationContext ctx;
 	
 	@PostConstruct
 	public void init() {
 		try {
 			empService.start(streamConsumer);
-			System.out.println("Listening on topic " + config.getTopic());
+			logger.log("Listening on topic " + config.getTopic());
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
-			System.out.println("Failed to subsribe to stream. Reason: " + e.getMessage());
+			logger.log("Failed to subsribe to stream. Reason: " + e.getMessage());
 			ctx.close();
 		}
 	}

@@ -30980,8 +30980,6 @@ var App = console.log('Hello world from Browserify!');
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-ReactDOM.render(React.createElement("h1", null, "Hello, world From React!"), document.getElementById('app'));
-
 module.exports = App;
 
 },{"jquery":26,"react":186,"react-dom":32}]},{},[187]);

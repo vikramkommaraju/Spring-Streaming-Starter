@@ -1,4 +1,4 @@
-package com.streaming.demo;
+package com.streaming.demo.component;
 
 import java.util.Date;
 import java.util.Map;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.streaming.demo.QueryAlert__C.QueryAlertBuilder;
+import com.streaming.demo.component.QueryAlert__C.QueryAlertBuilder;
 
 @Service
 public class StreamResponseParser {
@@ -22,7 +22,7 @@ public class StreamResponseParser {
 	}
 	
 	public boolean isAccountEntityQueried(JsonObject jsonResponse) {
-		return getQueriedEntity(jsonResponse).contains("Account");
+		return getQueriedEntity(jsonResponse) != null ? getQueriedEntity(jsonResponse).contains("Account") : false;
 	}
 	
 	public QueryAlert__C newAlert(JsonObject jsonResponse) {
@@ -36,17 +36,17 @@ public class StreamResponseParser {
 	
 	private String getUserName(JsonObject jsonResponse) {
 		JsonElement userName = jsonResponse.get("Username");
-		return userName.getAsString();
+		return userName != null ? userName.getAsString() : null;
 	}
 	
 	private double getRowsProcessed(JsonObject jsonResponse) {
 		JsonElement rowsProcessed = jsonResponse.get("RowsProcessed");
-		return Double.parseDouble(rowsProcessed.getAsString());
+		return rowsProcessed != null ? Double.parseDouble(rowsProcessed.getAsString()) : 0.0;
 	}
 	
 	private String getQueriedEntity(JsonObject jsonResponse) {
 		JsonElement queriedEntities = jsonResponse.get("QueriedEntities");
-		return queriedEntities.getAsString();
+		return queriedEntities != null ? queriedEntities.getAsString() : null;
 	}	
 	
 }

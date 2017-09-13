@@ -1,4 +1,4 @@
-package com.streaming.demo;
+package com.streaming.demo.component;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,9 @@ public class RestService {
 
 	@Autowired
 	StreamConfiguration config;
+	
+	@Autowired
+	DebugLogger logger;
 
 	private final Client client = Client.create();
 	private String accessToken;
@@ -37,16 +40,16 @@ public class RestService {
 
 		String accessToken = getAccessToken();
 		String url = buildPostObjectUrl();
-		System.out.println(url);
+		logger.log("URL to create custom object: url");
 		String input =  "{ \"Username__c\" : \""+alert.getUserName()+"\",  \"RowsProcessed__c\" : \""+alert.getRowsProcessed()+"\", \"QueryDate__c\" : \""+alert.getQueryDate()+"\", \"QueriedEntity__c\" : \""+alert.getQueriedEntity()+"\" }";
-		System.out.println(input);
+		logger.log(input);
 		WebResource webResource = client.resource(url);
 		ClientResponse response = webResource.type("application/json")
 				.header("Authorization", "Bearer " + accessToken)
 				.post(ClientResponse.class, input);
 		String output = response.getEntity(String.class);
-		System.out.println(output);
-		System.out.println("Create new custom object Success: ");
+		logger.log(output);
+		logger.log("Create new custom object Success: ");
 		
 	}
 	
