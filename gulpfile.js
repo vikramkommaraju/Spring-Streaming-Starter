@@ -15,8 +15,8 @@ var config = {
 	port: 9005,
 	devBaseUrl: 'http://localhost',
 	paths: {
-		html: './src/main/resources/templates/*.html',
-		js: './src/main/resources/static/js/*.js',
+		html: './src/main/resources/templates/**/*.html',
+		js: './src/main/resources/static/js/**/*.js',
 		css: [
 			'node_modules/bootstrap/dist/css/bootstrap.min.css',
 			'node_modules/bootstrap/dist/css/bootstrap-theme.min.css',	
@@ -65,4 +65,4 @@ gulp.task('watch', function(){
 
 });
 
-gulp.task('default', ['html', 'js', 'css', 'lint']);
+gulp.task('default', ['html', 'js', 'css']);

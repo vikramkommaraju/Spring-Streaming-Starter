@@ -1,19 +1,23 @@
 package com.streaming.demo.component;
 
-import java.util.Date;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.streaming.demo.component.EventGeneratorTask.EntityType;
 import com.streaming.demo.component.QueryAlert__C.QueryAlertBuilder;
 
 @Service
 public class StreamResponseParser {
 	
 	private Gson gson = new Gson(); 
+	List<String> expectedTypes = Arrays.asList(Stream.of(EntityType.values()).map(EntityType::name).toArray(String[]::new));
 	
 	public JsonObject jsonify(Map<String, Object> message) {
 		Object payload = message.get("payload");
@@ -21,13 +25,14 @@ public class StreamResponseParser {
 		return gson.fromJson(json, JsonObject.class);
 	}
 	
-	public boolean isAccountEntityQueried(JsonObject jsonResponse) {
-		return getQueriedEntity(jsonResponse) != null ? getQueriedEntity(jsonResponse).contains("Account") : false;
+	public boolean isFilteredEntity(JsonObject jsonResponse) {
+		return getQueriedEntity(jsonResponse) != null ? expectedTypes.contains(getQueriedEntity(jsonResponse)) : false;
 	}
 	
 	public QueryAlert__C newAlert(JsonObject jsonResponse) {
 		QueryAlertBuilder builder = QueryAlertBuilder.newBuilder();
-		return builder.queriedEntity(getQueriedEntity(jsonResponse))
+		String queriedEntity = getQueriedEntity(jsonResponse);
+		return builder.queriedEntity(queriedEntity)
 			   .rowsProcessed(getRowsProcessed(jsonResponse))
 			   .queryDate("2017-09-12")
 			   .userName(getUserName(jsonResponse))

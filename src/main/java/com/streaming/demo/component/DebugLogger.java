@@ -13,6 +13,7 @@ public class DebugLogger {
 	DebugLogRepository repository;
 	
 	public void log(String message) {
+		System.out.println(message);
 		repository.save(new DebugLog(message));
 	}
 }

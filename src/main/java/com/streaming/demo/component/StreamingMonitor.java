@@ -28,19 +28,26 @@ public class StreamingMonitor {
 	@Autowired
 	private ConfigurableApplicationContext ctx;
 	
-	@PostConstruct
-	public void init() {
+	public boolean begin() {
+		boolean result = true;
 		try {
+			logger.log("Opening stream... " + config.getTopic());
 			empService.start(streamConsumer);
-			logger.log("Listening on topic " + config.getTopic());
+			logger.log("Success: Listening on topic " + config.getTopic());
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
-			logger.log("Failed to subsribe to stream. Reason: " + e.getMessage());
-			ctx.close();
+			result = false;
 		}
+		return result;
+	}
+	
+	public void end() {
+		logger.log("Closing stream... " + config.getTopic());
+		empService.stop();
+		logger.log("Closed stream... " + config.getTopic());
 	}
 	
 	@PreDestroy
-	public void cleanUp() {
-		empService.stop();
+	public void close() {
+		end();
 	}
 }

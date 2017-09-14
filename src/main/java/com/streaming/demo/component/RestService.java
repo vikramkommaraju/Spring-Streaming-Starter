@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.streaming.demo.component.EventGeneratorTask.EntityType;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -36,6 +37,16 @@ public class RestService {
 		return accessToken;
 	}
 	
+	public String query(EntityType entity, int limit) {
+		String accessToken = getAccessToken();
+		String url = buildQueryEntityUrl(entity, limit);
+		System.out.println("Query : " + url);
+		WebResource webResource = client.resource(url);
+		ClientResponse response = webResource.type("application/json").header("Authorization", "Bearer " + accessToken).get(ClientResponse.class);
+		String output = response.getEntity(String.class);
+		return output;
+	}
+
 	public void createQueryAlertCustomObject(QueryAlert__C alert) {
 
 		String accessToken = getAccessToken();
@@ -60,5 +71,11 @@ public class RestService {
 	private String buildPostObjectUrl() {
 		return config.getServerUrl()+"/services/data/"+config.getApiVersion()+"/sobjects/QueryAlert__c";
 	}
+	
+	private String buildQueryEntityUrl(EntityType entity, int limit) {
+		String queryString = "Select+Id+From+"+entity+"+LIMIT+"+limit;
+		return config.getServerUrl()+"/services/data/"+config.getApiVersion()+"/query?q="+queryString;
+	}
+
 
 }

@@ -20,15 +20,24 @@ public class StreamConsumer implements Consumer<Map<String, Object>> {
 	@Autowired
 	DebugLogger logger;
 	
+	@Autowired
+	WebSocketController socketController;
+	
 	@Override
 	public void accept(Map<String, Object> message) {
 
 		JsonObject jsonResponse = streamParser.jsonify(message);
 		
-		if(streamParser.isAccountEntityQueried(jsonResponse)) {
+		if(streamParser.isFilteredEntity(jsonResponse)) {
 			logger.log("Received API Event on Account!");
 			QueryAlert__C alert = streamParser.newAlert(jsonResponse);
 			restService.createQueryAlertCustomObject(alert);
+			try {
+				System.out.println("Publish event!");
+				socketController.sendEventNotification(alert);
+			} catch (Exception e) {
+				System.out.println("Failed to publish event on channel. Reason: " + e.getMessage());
+			}
 		}
 		
 	}

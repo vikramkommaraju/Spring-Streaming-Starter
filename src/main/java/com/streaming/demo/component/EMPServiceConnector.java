@@ -53,6 +53,7 @@ public class EMPServiceConnector {
 	}
 	
 	public void stop() {
+		System.out.println("Closing stream");
 		connector.stop();
 	}
 }
