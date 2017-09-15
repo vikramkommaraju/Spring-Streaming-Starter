@@ -4,14 +4,26 @@ var React = require('react');
 var Dashboard = require('./dashboard');
 var Stomp = require('stompjs');
 var SockJS = require('sockjs-client');
+var NotifService = require('./notifService');
 var stompClient = null;
-var entityData = {"Account" : 0, "Lead" : 0, "Contact" : 0, "Opportunity" : 0};
-var barColors = [
-                'rgb(255, 99, 132',
-                'rgb(54, 162, 235)',
-                'rgb(255, 206, 86)',
-                'rgb(75, 192, 192)'
-            ];			
+var entityData = {"Account" : 0, "Lead" : 0, "Contact" : 0, "Opportunity" : 0, "Report" : 0};
+var barColors = [ "#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"];			
+var labels = ['Account', 'Lead', 'Contact', 'Opportunity', 'Report'];
+
+
+const StatsBoard = (props) => {
+
+	return(
+			<div>
+				<h2><span className="label label-default">Account</span>   <span className="badge">5</span></h2>
+				<h2><span className="label label-default">Lead</span>  <span className="badge">10</span></h2>
+				<h2><span className="label label-default">Contact</span>  <span className="badge">25</span></h2>
+				<h2><span className="label label-default">Opportunity</span>  <span className="badge">3</span></h2>
+				<h2><span className="label label-default">Report</span>  <span className="badge">12</span></h2>
+				
+			</div>
+		);
+}
 
 const ConnectionButton = (props) => {
 	let button;
@@ -43,7 +55,7 @@ var Monitor = React.createClass({
 		return {
 			isConnected: false,
 			connectionStatus: "Disconnected",
-			chartData: { labels: Object.keys(entityData), datasets: [{ data: Object.values(entityData), backgroundColor: barColors,  }]  } 
+			chartData: { labels: labels, datasets: [{ data: Object.values(entityData), backgroundColor: barColors,  }]  } 
 		};
 
 	},
@@ -131,7 +143,7 @@ var Monitor = React.createClass({
 	processNotification : function(entityName, rowsProcessed) {
 		console.log('Got Notification for: ' + entityName);
 		entityData[entityName] = rowsProcessed;
-		this.setState( {chartData: { labels: Object.keys(entityData), 
+		this.setState( {chartData: { labels: labels, 
 									 datasets: [{ data: Object.values(entityData), backgroundColor: barColors,  }] }} );
 
 	},
@@ -150,6 +162,9 @@ var Monitor = React.createClass({
 	    	var entityName = JSON.parse(response.body).entityName;
 	    	var rowsProcessed = JSON.parse(response.body).rowsProcessed;
 	    	
+	    	if(rowsProcessed > 40) {
+	    		self.notifService.sendNotif(entityName, rowsProcessed);
+	    	}
 	    	self.processNotification(entityName, rowsProcessed);
 	    }	    
 	    
@@ -163,9 +178,17 @@ var Monitor = React.createClass({
 				
 				<div>
 					<div className="jumbotron">
-						<ConnectionStatus status={this.state.connectionStatus}/>
+					<div className="row">
+					<div className="col-md-10">
+						<ConnectionStatus status={this.state.connectionStatus} />
 						<ConnectionButton isConnected={this.state.isConnected} status={this.state.connectionStatus} connectToServer={this.connectToServer} disconnectFromServer={this.disconnectFromServer}/>
+					</div>
+					<div className="col-md-2">
+											
+					</div>
+					</div>
 						<Dashboard chartData={this.state.chartData}/>
+						<NotifService ref={(notifService) => { this.notifService = notifService; }}/>
 					</div>
 				</div>
 			

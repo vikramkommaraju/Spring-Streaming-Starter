@@ -49,19 +49,16 @@ public class RestService {
 
 	public void createQueryAlertCustomObject(QueryAlert__C alert) {
 
+		System.out.println("New Alert: " + alert);
 		String accessToken = getAccessToken();
 		String url = buildPostObjectUrl();
-		logger.log("URL to create custom object: url");
 		String input =  "{ \"Username__c\" : \""+alert.getUserName()+"\",  \"RowsProcessed__c\" : \""+alert.getRowsProcessed()+"\", \"QueryDate__c\" : \""+alert.getQueryDate()+"\", \"QueriedEntity__c\" : \""+alert.getQueriedEntity()+"\" }";
-		logger.log(input);
 		WebResource webResource = client.resource(url);
 		ClientResponse response = webResource.type("application/json")
 				.header("Authorization", "Bearer " + accessToken)
 				.post(ClientResponse.class, input);
 		String output = response.getEntity(String.class);
-		logger.log(output);
-		logger.log("Create new custom object Success: ");
-		
+		System.out.println(output);
 	}
 	
 	private String getAccessToken() {

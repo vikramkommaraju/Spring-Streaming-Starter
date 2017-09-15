@@ -3,20 +3,40 @@
 var React = require('react');
 var Doughnut = require('react-chartjs-2').Doughnut;
 var BarChart = require("react-chartjs-2").Bar;
+var LineChart = require("react-chartjs-2").Line;
+
 
 var chartOptions = {
 	responsive: true,
-        legend: {
-            position: 'top',
-        },
-        title: {
+    legend: {
+    		labels: ['Account', 'Lead', 'Contact', 'Opportunity', 'Report'],
+            position: 'bottom',
+        }, 
+    title: {
             display: true,
             text: 'API Events on Entities'
         },
         animation: {
             animateScale: true,
             animateRotate: true
-        }
+        },
+        scales: {
+			        xAxes: [{
+	                            display: true,
+	                            scaleLabel: {
+	                                display: true
+	                            }
+	                        }],
+                    yAxes: [{
+                            display: true,
+                            ticks: {
+                                beginAtZero: true,
+                                steps: 10,
+                                stepValue: 5,
+                                max: 60
+                            }
+                        }]
+    }
 };
 
 //{ labels: Object.keys({props.entityData}), datasets: [{ data: Object.values({props.entityData})}] } 
@@ -24,7 +44,7 @@ var chartOptions = {
 const Dashboard = (props) => {
 	return (
 		<div>
-			<Doughnut data={props.chartData} options={chartOptions} />
+			<BarChart data={props.chartData} options={chartOptions} width={200} height={80}/>
 		</div>
 		
 	);

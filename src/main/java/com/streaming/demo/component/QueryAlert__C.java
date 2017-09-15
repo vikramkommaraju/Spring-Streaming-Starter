@@ -1,7 +1,5 @@
 package com.streaming.demo.component;
 
-import java.util.Date;
-
 public class QueryAlert__C {
 
 	private double rowsProcessed;
@@ -34,6 +32,14 @@ public class QueryAlert__C {
 	public String getUserName() {
 		return userName;
 	}
+	
+	@Override
+	public String toString() {
+		return "QueryAlert__C [rowsProcessed=" + rowsProcessed + ", queriedEntity=" + queriedEntity + ", userName="
+				+ userName + "]";
+	}
+
+
 
 	public static class QueryAlertBuilder {
 		private double rowsProcessed;

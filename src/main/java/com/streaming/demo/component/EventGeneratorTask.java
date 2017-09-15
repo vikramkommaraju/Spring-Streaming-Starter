@@ -12,7 +12,7 @@ public class EventGeneratorTask {
 	@Autowired
 	RestService restService;
 	
-	@Scheduled(fixedRate = 2000)
+	@Scheduled(fixedRate = 500)
 	public void generateEvent() {
 		EntityType entity = getRandomEntityType();
 		int limit = ThreadLocalRandom.current().nextInt(5, 50);
@@ -29,6 +29,6 @@ public class EventGeneratorTask {
 		Lead,
 		Contact,
 		Opportunity,
-		Product
+		Report
 	}
 }

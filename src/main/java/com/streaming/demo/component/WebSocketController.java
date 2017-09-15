@@ -39,6 +39,7 @@ public class WebSocketController {
     				String entityName = alert.getQueriedEntity();
     				int rowsProcessed = (int) alert.getRowsProcessed();
     				EventNotificationMessage message = new EventNotificationMessage(entityName, rowsProcessed);
+    				System.out.println("Sending message: " + message);
 				template.convertAndSend("/topic/responses", message);
 			} catch (Exception e) {
 				System.out.println("Failed to send notification");

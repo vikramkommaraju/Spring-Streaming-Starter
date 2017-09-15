@@ -19,7 +19,9 @@ var config = {
 		js: './src/main/resources/static/js/**/*.js',
 		css: [
 			'node_modules/bootstrap/dist/css/bootstrap.min.css',
-			'node_modules/bootstrap/dist/css/bootstrap-theme.min.css',	
+			'node_modules/bootstrap/dist/css/bootstrap-theme.min.css',
+			'node_modules/bootstrap/dist/css/bootstrap-theme.min.css',
+			'node_modules/react-toastify/dist/ReactToastify.min.css'
 		],
 		mainJs: './src/main/resources/static/js/main.js',
 		dist: './src/main/resources/static/dist',

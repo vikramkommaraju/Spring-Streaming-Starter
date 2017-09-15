@@ -28,17 +28,22 @@ public class StreamConsumer implements Consumer<Map<String, Object>> {
 
 		JsonObject jsonResponse = streamParser.jsonify(message);
 		
-		if(streamParser.isFilteredEntity(jsonResponse)) {
-			logger.log("Received API Event on Account!");
-			QueryAlert__C alert = streamParser.newAlert(jsonResponse);
-			restService.createQueryAlertCustomObject(alert);
+		QueryAlert__C alert = null;
+		if(streamParser.shouldPublishEvent(jsonResponse)) {
+			alert = streamParser.newAlert(jsonResponse);
 			try {
 				System.out.println("Publish event!");
 				socketController.sendEventNotification(alert);
 			} catch (Exception e) {
 				System.out.println("Failed to publish event on channel. Reason: " + e.getMessage());
 			}
-		}
+			
+			if(streamParser.isRowsExceeded(jsonResponse)) {
+				restService.createQueryAlertCustomObject(alert);
+			}
+		} 
+		
+		
 		
 	}
 	

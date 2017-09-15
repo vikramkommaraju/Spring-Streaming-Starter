@@ -27,5 +27,13 @@ public class EventNotificationMessage {
 	public String getType() {
 		return type;
 	}
+
+	@Override
+	public String toString() {
+		return "EventNotificationMessage [entityName=" + entityName + ", rowsProcessed=" + rowsProcessed + ", type="
+				+ type + "]";
+	}
+	
+	
 	
 }

@@ -25,8 +25,16 @@ public class StreamResponseParser {
 		return gson.fromJson(json, JsonObject.class);
 	}
 	
+	public boolean shouldPublishEvent(JsonObject jsonResponse) {
+		return isFilteredEntity(jsonResponse);
+	}
+	
 	public boolean isFilteredEntity(JsonObject jsonResponse) {
 		return getQueriedEntity(jsonResponse) != null ? expectedTypes.contains(getQueriedEntity(jsonResponse)) : false;
+	}
+	
+	public boolean isRowsExceeded(JsonObject jsonResponse) {
+		return getRowsProcessed(jsonResponse) > 0;
 	}
 	
 	public QueryAlert__C newAlert(JsonObject jsonResponse) {
@@ -44,12 +52,12 @@ public class StreamResponseParser {
 		return userName != null ? userName.getAsString() : null;
 	}
 	
-	private double getRowsProcessed(JsonObject jsonResponse) {
+	public double getRowsProcessed(JsonObject jsonResponse) {
 		JsonElement rowsProcessed = jsonResponse.get("RowsProcessed");
 		return rowsProcessed != null ? Double.parseDouble(rowsProcessed.getAsString()) : 0.0;
 	}
 	
-	private String getQueriedEntity(JsonObject jsonResponse) {
+	public String getQueriedEntity(JsonObject jsonResponse) {
 		JsonElement queriedEntities = jsonResponse.get("QueriedEntities");
 		return queriedEntities != null ? queriedEntities.getAsString() : null;
 	}	
