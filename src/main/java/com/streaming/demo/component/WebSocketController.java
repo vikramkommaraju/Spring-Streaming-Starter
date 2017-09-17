@@ -15,8 +15,8 @@ public class WebSocketController {
 	@Autowired
 	private SimpMessagingTemplate template;
 
-    @MessageMapping("/connect")
-    @SendTo("/topic/responses")
+    @MessageMapping("/messages")
+    @SendTo("/topic/subscription")
     public SubscribeMessageResponse connect(SubscribeMessageRequest message) throws Exception {
         System.out.println("Received command " + message.getCommand());
         if("subscribe".equalsIgnoreCase(message.getCommand())) {
@@ -40,7 +40,7 @@ public class WebSocketController {
     				int rowsProcessed = (int) alert.getRowsProcessed();
     				EventNotificationMessage message = new EventNotificationMessage(entityName, rowsProcessed);
     				System.out.println("Sending message: " + message);
-				template.convertAndSend("/topic/responses", message);
+				template.convertAndSend("/topic/events", message);
 			} catch (Exception e) {
 				System.out.println("Failed to send notification");
 			}

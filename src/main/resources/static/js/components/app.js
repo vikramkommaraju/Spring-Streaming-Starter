@@ -1,19 +1,18 @@
 /*eslint-disable strict */ //Disabling check because we can't run strict mode. Need global vars.
 $ = jQuery = require('jquery');
 var React = require('react');
-var Header = require('./common/header');
+var Navbar = require('./common/nav-bar');
+var HomePage = require('./homePage');
+
 var Footer = require('./common/footer');
 var RouteHandler = require('react-router').RouteHandler;
 
 var App = React.createClass({
 	render: function() {
 		return (
-			<div className="container">
-				<Header />
-
-			 	<div className="container-fluid">
-					<RouteHandler />
-				</div>
+			<div className="wrapper">
+				<Navbar />
+				<HomePage />
 				
 				<Footer />
 			</div>

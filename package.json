@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "animate": "^1.0.0",
-    "bootstrap": "^3.3.5",
+    "bootstrap": "^3.3.7",
     "browserify": "^14.4.0",
     "chart.js": "^2.7.0",
     "flux": "^2.0.3",
@@ -21,6 +21,7 @@
     "gulp-open": "^1.0.0",
     "jquery": "^2.1.4",
     "lodash": "^4.17.4",
+    "pubsub-js": "^1.5.7",
     "react": "^15.6.1",
     "react-chartjs-2": "^2.6.2",
     "react-dom": "^15.6.1",

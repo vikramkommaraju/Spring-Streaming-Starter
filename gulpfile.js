@@ -18,11 +18,13 @@ var config = {
 		html: './src/main/resources/templates/**/*.html',
 		js: './src/main/resources/static/js/**/*.js',
 		css: [
+			'./src/main/resources/static/css/**/*.css',
 			'node_modules/bootstrap/dist/css/bootstrap.min.css',
 			'node_modules/bootstrap/dist/css/bootstrap-theme.min.css',
 			'node_modules/bootstrap/dist/css/bootstrap-theme.min.css',
 			'node_modules/react-toastify/dist/ReactToastify.min.css'
 		],
+		fonts: 'node_modules/font-awesome/fonts/fontawesome-webfont.*',
 		mainJs: './src/main/resources/static/js/main.js',
 		dist: './src/main/resources/static/dist',
 	},
@@ -67,4 +69,9 @@ gulp.task('watch', function(){
 
 });
 
-gulp.task('default', ['html', 'js', 'css']);
+gulp.task('fonts', function() {
+    return gulp.src(config.paths.fonts)
+            .pipe(gulp.dest(config.paths.dist + '/fonts'));
+});
+
+gulp.task('default', ['html', 'js', 'css', 'fonts']);

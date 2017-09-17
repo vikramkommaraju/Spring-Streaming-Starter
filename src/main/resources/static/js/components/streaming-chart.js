@@ -1,9 +1,7 @@
 "use strict";
 
 var React = require('react');
-var Doughnut = require('react-chartjs-2').Doughnut;
 var BarChart = require("react-chartjs-2").Bar;
-var LineChart = require("react-chartjs-2").Line;
 
 
 var chartOptions = {
@@ -35,9 +33,11 @@ var chartOptions = {
     }
 };
 
+
+
 //{ labels: Object.keys({props.entityData}), datasets: [{ data: Object.values({props.entityData})}] } 
 
-const Dashboard = (props) => {
+const StreamingChart = (props) => {
 	return (
 		<div>
 			<BarChart data={props.chartData} options={chartOptions} width={200} height={80}/>
@@ -47,4 +47,4 @@ const Dashboard = (props) => {
 };
 
 
-module.exports = Dashboard;
+module.exports = StreamingChart;
