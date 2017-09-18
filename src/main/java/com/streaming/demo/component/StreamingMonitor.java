@@ -31,9 +31,9 @@ public class StreamingMonitor {
 	public boolean begin() {
 		boolean result = true;
 		try {
-			logger.log("Opening stream... " + config.getTopic());
+			empService.stop();
+			Thread.sleep(1000);
 			empService.start(streamConsumer);
-			logger.log("Success: Listening on topic " + config.getTopic());
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
 			result = false;
 		}
@@ -41,9 +41,7 @@ public class StreamingMonitor {
 	}
 	
 	public void end() {
-		logger.log("Closing stream... " + config.getTopic());
 		empService.stop();
-		logger.log("Closed stream... " + config.getTopic());
 	}
 	
 	@PreDestroy

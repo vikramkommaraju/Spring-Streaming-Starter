@@ -65159,6 +65159,7 @@ var Router = require('react-router');
 var Link = Router.Link;
 var StreamingPanel = require('./streamingPanel');
 var MetricsDashboard = require('./metrics-dashboard');
+var NotificationsPanel = require('./notifications-panel');
 
 const PageHeader = (props) => {
 	return (
@@ -65169,35 +65170,6 @@ const PageHeader = (props) => {
 		);
 };
 
-
-const NotificationsPanel = (props) => {
-	return(
-		React.createElement("div", {className: "col-lg-4"}, 
-            React.createElement("div", {className: "panel panel-default"}, 
-                React.createElement("div", {className: "panel-heading"}, 
-                    React.createElement("i", {className: "fa fa-bell fa-fw"}), " Query Alerts"
-                ), 
-                React.createElement("div", {className: "panel-body"}, 
-                    React.createElement("div", {className: "list-group"}, 
-                        React.createElement("a", {href: "#", className: "list-group-item"}, 
-                            React.createElement("i", {className: "fa fa-comment fa-fw"}), " New Comment", 
-                            React.createElement("span", {className: "pull-right text-muted small"}, React.createElement("em", null, "4 minutes ago")
-                            )
-                        ), 
-                        React.createElement("a", {href: "#", className: "list-group-item"}, 
-                            React.createElement("i", {className: "fa fa-twitter fa-fw"}), " 3 New Followers", 
-                            React.createElement("span", {className: "pull-right text-muted small"}, React.createElement("em", null, "12 minutes ago")
-                            )
-                        )
-                        
-                    )
-                )
-            )
-            
-            
-        )
-	);
-};
 
 var Home = React.createClass({displayName: "Home",
 	 
@@ -65225,7 +65197,7 @@ var Home = React.createClass({displayName: "Home",
 
 module.exports = Home;
 
-},{"./metrics-dashboard":512,"./streamingPanel":518,"react":436,"react-router":379}],512:[function(require,module,exports){
+},{"./metrics-dashboard":512,"./notifications-panel":517,"./streamingPanel":519,"react":436,"react-router":379}],512:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -65277,6 +65249,10 @@ var MetricsDashboard = React.createClass({displayName: "MetricsDashboard",
 	eventStreamListener : function(response) {
 		var entityName = JSON.parse(response.body).entityName;
 	    var rowsProcessed = JSON.parse(response.body).rowsProcessed;
+
+	    if(rowsProcessed >= 20) {
+	    	PubSub.publish('Event-Notification', {'entityName' : entityName, 'rowsProcessed' : rowsProcessed});	    	
+	    }
 	    
 	    this.setState(prevState => ({
     									totalRowsProcessed : parseInt(prevState.totalRowsProcessed) + parseInt(rowsProcessed),
@@ -65622,11 +65598,97 @@ module.exports = NotFoundPage;
 "use strict";
 
 var React = require('react');
+var Router = require('react-router');
+var Link = Router.Link;
+var PubSub = require('pubsub-js');
+
+var NotificationEntry = (props) => {
+    return(
+        React.createElement("a", {href: "#", className: "list-group-item"}, 
+            React.createElement("i", {className: "fa fa-chevron-right"}), " ", props.label, 
+            React.createElement("span", {className: "pull-right text-muted small"}, React.createElement("em", null, props.rows, " rows exported")
+            )
+        )
+    );
+};
+
+var NotificationsPanel = React.createClass({displayName: "NotificationsPanel",
+
+    getInitialState: function() {
+        return {
+            entries : [],
+            rowsProcessed: 0,
+            entityName : '',
+        };
+
+    },
+
+    eventNotification: function(msg, data) {
+
+        this.setState((prevState) => {
+                                       prevState.entries.unshift({rowsProcessed: data.rowsProcessed, entityName: data.entityName});
+                                       return { entries : prevState.entries };
+                                    });
+
+    },
+
+    notificationCleaner : function() {
+        
+        if(this.state.entries.length > 5) {
+            
+            this.setState((prevState) => {
+                                       prevState.entries.pop();
+                                       return { entries : prevState.entries };
+                                    });
+
+        }
+    },
+
+    componentWillMount: function() {
+        PubSub.subscribe( 'Event-Notification', this.eventNotification );
+        setInterval(this.notificationCleaner, 1000);
+    },
+
+    render : function() {
+
+        return(
+
+            React.createElement("div", {className: "col-lg-4"}, 
+                    React.createElement("div", {className: "panel panel-default"}, 
+                        React.createElement("div", {className: "panel-heading"}, 
+                            React.createElement("i", {className: "fa fa-bell fa-fw"}), " Query Alerts"
+                        ), 
+                        React.createElement("div", {className: "panel-body"}, 
+                            React.createElement("div", {className: "list-group"}, 
+
+                                this.state.entries.map( (entry, i) => 
+                                        React.createElement(NotificationEntry, {key: i, label: entry.entityName, rows: entry.rowsProcessed})
+                                )
+                            )
+                        )
+                    )
+        )
+
+        );               
+    }
+});
+
+module.exports = NotificationsPanel;
+
+},{"pubsub-js":203,"react":436,"react-router":379}],518:[function(require,module,exports){
+"use strict";
+
+var React = require('react');
 var BarChart = require("react-chartjs-2").Bar;
 
 
 var chartOptions = {
 	responsive: true,
+	legend : {
+		display : false,
+		position : 'bottom',
+		labels : []
+	},
     title: {
             display: true,
             text: 'API Events on Entities'
@@ -65648,7 +65710,6 @@ var chartOptions = {
                                 beginAtZero: true,
                                 steps: 10,
                                 stepValue: 5,
-                                max: 60
                             }
                         }]
     }
@@ -65670,7 +65731,7 @@ const StreamingChart = (props) => {
 
 module.exports = StreamingChart;
 
-},{"react":436,"react-chartjs-2":204}],518:[function(require,module,exports){
+},{"react":436,"react-chartjs-2":204}],519:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -65685,7 +65746,7 @@ var topic = "/topic/subscription";
     												 				
 const ConnectionStatusLabel = (props) => {
 	return(
-		React.createElement("span", null, props.status)
+		React.createElement("span", {className: props.status == 'Connected' ? "connected" : "disconnected"}, props.status, React.createElement("i", {className: props.status == 'Connected' ? "fa fa-circle connected blink_me status-icon" : "fa fa-circle disconnected status-icon", "aria-hidden": "true"}, " "))
 	);
 };
 
@@ -65757,7 +65818,6 @@ var StreamingPanel = React.createClass({displayName: "StreamingPanel",
 		var entityName = JSON.parse(response.body).entityName;
 	    var rowsProcessed = JSON.parse(response.body).rowsProcessed;
 	    
-	    console.log('WOOOHOOOOOO!');
 	    this.setState(prevState => ({
     									entityNameToColorMap: prevState.entityNameToColorMap.has(entityName) ? prevState.entityNameToColorMap : this.state.entityNameToColorMap.set(entityName, this.getNextColor()),
     									entityNameToRowsMap: prevState.entityNameToRowsMap.set(entityName, rowsProcessed),
@@ -65766,7 +65826,7 @@ var StreamingPanel = React.createClass({displayName: "StreamingPanel",
     											prevState.entityNameToDataSet.set(entityName, this.getUpdatedDataset(entityName, rowsProcessed)) : this.state.entityNameToDataSet.set(entityName, this.createNewDatatSet(rowsProcessed)),
     									chartData: { labels: Array.from(this.state.entityNameToDataSet.keys()), 
     												 datasets: [{
-    												 				backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+    												 				backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "red"],
           															data : Array.from(this.state.entityNameToRowsMap.values())
     												 			}]
     												}
@@ -65851,7 +65911,7 @@ var StreamingPanel = React.createClass({displayName: "StreamingPanel",
 
 module.exports = StreamingPanel;
 
-},{"./connectionService":509,"./streaming-chart":517,"pubsub-js":203,"react":436,"react-router":379}],519:[function(require,module,exports){
+},{"./connectionService":509,"./streaming-chart":518,"pubsub-js":203,"react":436,"react-router":379}],520:[function(require,module,exports){
 "use strict";
 var React = require('react');
 var ReactDOM = require('react-dom');
@@ -65862,7 +65922,7 @@ Router.run(routes, Router.HistoryLocation, function(Handler) {
 	ReactDOM.render(React.createElement(Handler, null), document.getElementById('app'));
 });
 
-},{"./routes":520,"react":436,"react-dom":205,"react-router":379}],520:[function(require,module,exports){
+},{"./routes":521,"react":436,"react-dom":205,"react-router":379}],521:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -65884,4 +65944,4 @@ var routes = (
 
 module.exports = routes;
 
-},{"./components/about/aboutPage":503,"./components/app":504,"./components/debug/debugPage":510,"./components/homePage":511,"./components/monitor/monitorPage":514,"./components/notFoundPage":516,"react":436,"react-router":379}]},{},[519]);
+},{"./components/about/aboutPage":503,"./components/app":504,"./components/debug/debugPage":510,"./components/homePage":511,"./components/monitor/monitorPage":514,"./components/notFoundPage":516,"react":436,"react-router":379}]},{},[520]);

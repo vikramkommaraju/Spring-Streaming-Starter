@@ -32,7 +32,6 @@ public class StreamConsumer implements Consumer<Map<String, Object>> {
 		if(streamParser.shouldPublishEvent(jsonResponse)) {
 			alert = streamParser.newAlert(jsonResponse);
 			try {
-				System.out.println("Publish event!");
 				socketController.sendEventNotification(alert);
 			} catch (Exception e) {
 				System.out.println("Failed to publish event on channel. Reason: " + e.getMessage());

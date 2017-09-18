@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.streaming.demo.component.EventGeneratorTask.EntityType;
 import com.streaming.demo.component.QueryAlert__C.QueryAlertBuilder;
+import com.streaming.demo.component.RestService.EntityType;
 
 @Service
 public class StreamResponseParser {
@@ -34,7 +34,7 @@ public class StreamResponseParser {
 	}
 	
 	public boolean isRowsExceeded(JsonObject jsonResponse) {
-		return getRowsProcessed(jsonResponse) > 0;
+		return getRowsProcessed(jsonResponse) > 40;
 	}
 	
 	public QueryAlert__C newAlert(JsonObject jsonResponse) {

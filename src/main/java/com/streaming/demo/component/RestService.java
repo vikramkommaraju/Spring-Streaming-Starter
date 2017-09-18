@@ -4,7 +4,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.streaming.demo.component.EventGeneratorTask.EntityType;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -72,6 +71,15 @@ public class RestService {
 	private String buildQueryEntityUrl(EntityType entity, int limit) {
 		String queryString = "Select+Id+From+"+entity+"+LIMIT+"+limit;
 		return config.getServerUrl()+"/services/data/"+config.getApiVersion()+"/query?q="+queryString;
+	}
+	
+	public enum EntityType {
+		Account,
+		Lead,
+		Contact,
+		Opportunity,
+		Report,
+		ApiEvent
 	}
 
 

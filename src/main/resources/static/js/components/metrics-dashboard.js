@@ -49,6 +49,10 @@ var MetricsDashboard = React.createClass({
 	eventStreamListener : function(response) {
 		var entityName = JSON.parse(response.body).entityName;
 	    var rowsProcessed = JSON.parse(response.body).rowsProcessed;
+
+	    if(rowsProcessed >= 40) {
+	    	PubSub.publish('Event-Notification', {'entityName' : entityName, 'rowsProcessed' : rowsProcessed});	    	
+	    }
 	    
 	    this.setState(prevState => ({
     									totalRowsProcessed : parseInt(prevState.totalRowsProcessed) + parseInt(rowsProcessed),

@@ -6,6 +6,11 @@ var BarChart = require("react-chartjs-2").Bar;
 
 var chartOptions = {
 	responsive: true,
+	legend : {
+		display : false,
+		position : 'bottom',
+		labels : []
+	},
     title: {
             display: true,
             text: 'API Events on Entities'
@@ -27,7 +32,6 @@ var chartOptions = {
                                 beginAtZero: true,
                                 steps: 10,
                                 stepValue: 5,
-                                max: 60
                             }
                         }]
     }

@@ -12,7 +12,7 @@ var topic = "/topic/subscription";
     												 				
 const ConnectionStatusLabel = (props) => {
 	return(
-		<span>{props.status}</span>
+		<span className={props.status == 'Connected' ? "connected" : "disconnected"}>{props.status}<i className={props.status == 'Connected' ? "fa fa-circle connected blink_me status-icon" : "fa fa-circle disconnected status-icon"} aria-hidden="true"> </i></span>
 	);
 };
 
@@ -84,7 +84,6 @@ var StreamingPanel = React.createClass({
 		var entityName = JSON.parse(response.body).entityName;
 	    var rowsProcessed = JSON.parse(response.body).rowsProcessed;
 	    
-	    console.log('WOOOHOOOOOO!');
 	    this.setState(prevState => ({
     									entityNameToColorMap: prevState.entityNameToColorMap.has(entityName) ? prevState.entityNameToColorMap : this.state.entityNameToColorMap.set(entityName, this.getNextColor()),
     									entityNameToRowsMap: prevState.entityNameToRowsMap.set(entityName, rowsProcessed),
@@ -93,7 +92,7 @@ var StreamingPanel = React.createClass({
     											prevState.entityNameToDataSet.set(entityName, this.getUpdatedDataset(entityName, rowsProcessed)) : this.state.entityNameToDataSet.set(entityName, this.createNewDatatSet(rowsProcessed)),
     									chartData: { labels: Array.from(this.state.entityNameToDataSet.keys()), 
     												 datasets: [{
-    												 				backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+    												 				backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "red"],
           															data : Array.from(this.state.entityNameToRowsMap.values())
     												 			}]
     												}

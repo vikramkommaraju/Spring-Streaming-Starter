@@ -5,6 +5,7 @@ var Router = require('react-router');
 var Link = Router.Link;
 var StreamingPanel = require('./streamingPanel');
 var MetricsDashboard = require('./metrics-dashboard');
+var NotificationsPanel = require('./notifications-panel');
 
 const PageHeader = (props) => {
 	return (
@@ -15,35 +16,6 @@ const PageHeader = (props) => {
 		);
 };
 
-
-const NotificationsPanel = (props) => {
-	return(
-		<div className="col-lg-4">
-            <div className="panel panel-default">
-                <div className="panel-heading">
-                    <i className="fa fa-bell fa-fw"></i> Query Alerts
-                </div>
-                <div className="panel-body">
-                    <div className="list-group">
-                        <a href="#" className="list-group-item">
-                            <i className="fa fa-comment fa-fw"></i> New Comment
-                            <span className="pull-right text-muted small"><em>4 minutes ago</em>
-                            </span>
-                        </a>
-                        <a href="#" className="list-group-item">
-                            <i className="fa fa-twitter fa-fw"></i> 3 New Followers
-                            <span className="pull-right text-muted small"><em>12 minutes ago</em>
-                            </span>
-                        </a>
-                        
-                    </div>
-                </div>
-            </div>
-            
-            
-        </div>
-	);
-};
 
 var Home = React.createClass({
 	 
