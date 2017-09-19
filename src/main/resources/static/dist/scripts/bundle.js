@@ -65438,7 +65438,7 @@ var MetricCharts = React.createClass({displayName: "MetricCharts",
 					React.createElement(MetricChart, {label: "Entities Queried", data: this.state.eventCountChart, options: chartOptions}), 
 					React.createElement(MetricChart, {label: "Rows Processed", data: this.state.rowsCountChart, options: chartOptions}), 
 					React.createElement(MetricChart, {label: "Query Alerts", data: this.state.queryCountChart, options: chartOptions}), 
-					React.createElement(MetricChart, {label: "Anomalies", data: this.state.anomaliesCountChart, options: chartOptions})					
+					React.createElement(MetricChart, {label: "High Volume Queries", data: this.state.anomaliesCountChart, options: chartOptions})					
 				)
 		);
 	}
@@ -65523,8 +65523,8 @@ var MetricsDashboard = React.createClass({displayName: "MetricsDashboard",
 				React.createElement("div", null, 		                
 		            React.createElement(MetricCounter, {label: "Total Number of API Events", style: "panel-primary", icon: "fa-tasks", metric: this.state.totalEvents}), 
 		            React.createElement(MetricCounter, {label: "Avg Number of Rows Queried", style: "panel-green", icon: "fa-bar-chart", metric:  this.state.totalEvents == 0 ? 0 : ( this.state.totalRowsProcessed / this.state.totalEvents).toFixed(2)}), 
-		            React.createElement(MetricCounter, {label: "Total Number Query Alerts", style: "panel-yellow", icon: "fa-warning", metric: this.state.queryAlerts}), 
-		            React.createElement(MetricCounter, {label: "Total Number of Anomalies", style: "panel-red", icon: "fa-question-circle", metric: this.state.anomalies})		             
+		            React.createElement(MetricCounter, {label: "Number Query Alerts", style: "panel-yellow", icon: "fa-warning", metric: this.state.queryAlerts}), 
+		            React.createElement(MetricCounter, {label: "High Volume Queries", style: "panel-red", icon: "fa-question-circle", metric: this.state.anomalies})		             
 				)
 		);
 	}
