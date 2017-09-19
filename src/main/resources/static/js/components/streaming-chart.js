@@ -32,7 +32,7 @@ var chartOptions = {
                                 beginAtZero: true,
                                 steps: 10,
                                 stepValue: 5,
-                                max: 100
+                                max: 500
                             }
                         }]
     }

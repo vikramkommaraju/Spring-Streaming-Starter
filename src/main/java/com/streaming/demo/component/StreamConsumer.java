@@ -5,15 +5,14 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
 import com.streaming.demo.component.QueryAlert__C.QueryAlertBuilder;
+import com.streaming.demo.component.RestService.EntityType;
 
-@Scope(value = "singleton")
-@Component
+@Service
 public class StreamConsumer implements Consumer<Map<String, Object>> {
 
 	@Autowired
@@ -47,25 +46,7 @@ public class StreamConsumer implements Consumer<Map<String, Object>> {
 			if(streamParser.isRowsExceeded(jsonResponse)) {
 				restService.createQueryAlertCustomObject(alert);
 			}
-		} 
-		
-		
-		
+		} 		
 	}
 	
-	//@Scheduled(fixedRate = 200)
-    public void generateDummyStreamOfEvents() { 
-		EntityType entity = EntityType.values()[ThreadLocalRandom.current().nextInt(0, EntityType.values().length)];
-		QueryAlert__C alert = QueryAlertBuilder.newBuilder().queriedEntity(entity.toString()).rowsProcessed(ThreadLocalRandom.current().nextInt(5, 50)).build();
-		socketController.sendEventNotification(alert);
-		
-	}
-
-	public enum EntityType {
-		Account,
-		Lead,
-		Contact,
-		Opportunity,
-		Report
-	}
 }

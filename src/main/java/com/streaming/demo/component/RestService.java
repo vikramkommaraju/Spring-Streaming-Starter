@@ -49,7 +49,7 @@ public class RestService {
 
 	public void createQueryAlertCustomObject(QueryAlert__C alert) {
 
-		System.out.println("New Alert: " + alert);
+		//System.out.println("New Alert: " + alert);
 		String accessToken = getAccessToken();
 		String url = buildPostObjectUrl();
 		String input =  "{ \"Username__c\" : \""+alert.getUserName()+"\",  \"RowsProcessed__c\" : \""+alert.getRowsProcessed()+"\", \"QueryDate__c\" : \""+alert.getQueryDate()+"\", \"QueriedEntity__c\" : \""+alert.getQueriedEntity()+"\" }";
@@ -58,7 +58,6 @@ public class RestService {
 				.header("Authorization", "Bearer " + accessToken)
 				.post(ClientResponse.class, input);
 		String output = response.getEntity(String.class);
-		System.out.println(output);
 	}
 	
 	private String getAccessToken() {
@@ -79,8 +78,7 @@ public class RestService {
 		Lead,
 		Contact,
 		Opportunity,
-		Report,
-		ApiEvent
+		Report
 	}
 
 

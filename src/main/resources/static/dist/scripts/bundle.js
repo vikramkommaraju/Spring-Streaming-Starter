@@ -65161,27 +65161,67 @@ var StreamingPanel = require('./streamingPanel');
 var MetricsDashboard = require('./metrics-dashboard');
 var NotificationsPanel = require('./notifications-panel');
 var MetricCharts = require('./metric-charts');
+var ConnectionService = require('./connectionService');
 
 
-const PageHeader = (props) => {
+const GeneratorButton = (props) => {
 	return (
-			React.createElement("div", {className: "col-lg-12"}, 
-                React.createElement("h1", {className: "display-3"}, "API Events Streaming Demo"), 
-                React.createElement("hr", null)
-			)
-		);
-};
+		React.createElement("p", null, React.createElement("a", {className:  "btn btn-lg btn-block btn-"+props.style, href: "#", role: "button", onClick: () => props.generateOnClick()}, React.createElement("span", {className:  props.label == 'Start' ? "glyphicon glyphicon-play" : "glyphicon glyphicon-stop"}), " ", props.label))
+	);
+
+}
 
 
 var Home = React.createClass({displayName: "Home",
 	 
+	getInitialState: function() {
+		return {
+			label: "Start",
+			style: "success"		
+		};
+
+	},
+
+	commandListener : function(response) {
+		var self=this;
+		var result = JSON.parse(response.body).content;
+		
+		if(result == 'unsubscribe-success') { 
+			self.setState({label: 'Start', style: 'success'});
+		}
+	},
+
+	eventGenerator : function() {
+		var self = this;
+		if(this.state.label == 'Start') {
+			ConnectionService.connect(self.connectionCallback);
+			self.setState({label: 'Stop', style: 'danger'});
+		} else {
+			ConnectionService.send("stop");
+			self.setState({label: 'Start', style: 'success'});
+		}
+	}, 
+
+	connectionCallback : function() {
+		ConnectionService.send("start");
+		ConnectionService.register("/topic/subscription", this.commandListener);
+	},
+
 	render: function(){
 		return (
 				React.createElement("div", {id: "page-wrapper"}, 
 		            
 		            
 		            React.createElement("div", {className: "row"}, 
-		            	React.createElement(PageHeader, null)
+		            	React.createElement("div", {className: "col-md-3"}, 
+		            		React.createElement(GeneratorButton, {style: this.state.style, label: this.state.label, generateOnClick: this.eventGenerator})
+						), 
+			            React.createElement("div", {className: "col-md-9"}, 
+			                React.createElement("h1", {className: "display-3"}, "API Events Streaming Demo")
+			            ), 
+		            	
+			            React.createElement("hr", null)
+
 		            ), 
 
 		            React.createElement("div", {className: "row"}, 
@@ -65202,7 +65242,7 @@ var Home = React.createClass({displayName: "Home",
 
 module.exports = Home;
 
-},{"./metric-charts":512,"./metrics-dashboard":513,"./notifications-panel":518,"./streamingPanel":520,"react":436,"react-router":379}],512:[function(require,module,exports){
+},{"./connectionService":509,"./metric-charts":512,"./metrics-dashboard":513,"./notifications-panel":518,"./streamingPanel":520,"react":436,"react-router":379}],512:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -65274,7 +65314,7 @@ var MetricCharts = React.createClass({displayName: "MetricCharts",
 
 	    
 
-	    if(rowsProcessed >= 40) {
+	    if(rowsProcessed >= 400) {
 			this.setState(prevState => {
 
 											return ({
@@ -65288,7 +65328,7 @@ var MetricCharts = React.createClass({displayName: "MetricCharts",
 	    	);	    	
 	    } 
 
-	    if(rowsProcessed >= 100) {
+	    if(rowsProcessed >= 490) {
 			this.setState(prevState => {
 
 														return ({
@@ -65464,8 +65504,8 @@ var MetricsDashboard = React.createClass({displayName: "MetricsDashboard",
 	    this.setState(prevState => ({
     									totalRowsProcessed : parseInt(prevState.totalRowsProcessed) + parseInt(rowsProcessed),
     									totalEvents : parseInt(prevState.totalEvents) + 1,
-    									queryAlerts : parseInt(rowsProcessed) > 40 ? parseInt(prevState.queryAlerts) + 1 : parseInt(prevState.queryAlerts),
-    									anomalies : parseInt(rowsProcessed) > 100 ? parseInt(prevState.anomalies) + 1 : parseInt(prevState.anomalies)
+    									queryAlerts : parseInt(rowsProcessed) > 400 ? parseInt(prevState.queryAlerts) + 1 : parseInt(prevState.queryAlerts),
+    									anomalies : parseInt(rowsProcessed) > 490 ? parseInt(prevState.anomalies) + 1 : parseInt(prevState.anomalies)
     								})
 	    );
 	},
@@ -65921,7 +65961,7 @@ var chartOptions = {
                                 beginAtZero: true,
                                 steps: 10,
                                 stepValue: 5,
-                                max: 100
+                                max: 500
                             }
                         }]
     }
@@ -66060,9 +66100,7 @@ var StreamingPanel = React.createClass({displayName: "StreamingPanel",
 		} 
 		else if(result == 'subscribe-failed') {
 			self.setState({status: "Failed", label: "Subscribe", style: "success", disabled: false});
-		} else {
-			self.setState({status: "Disconnected", label: "Subscribe", style: "success", disabled: false});						
-		}
+		} 
 			
 	},
 

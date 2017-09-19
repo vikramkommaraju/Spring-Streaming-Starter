@@ -3,14 +3,14 @@ package com.streaming.demo.component;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SubscribeMessageRequest {
+public class WebSocketMessageRequest {
 
 	private String command;
 
-    public SubscribeMessageRequest() {
+    public WebSocketMessageRequest() {
     }
 
-    public SubscribeMessageRequest(String command) {
+    public WebSocketMessageRequest(String command) {
         this.command = command;
     }
 

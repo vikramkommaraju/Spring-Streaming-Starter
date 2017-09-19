@@ -55,8 +55,8 @@ var MetricsDashboard = React.createClass({
 	    this.setState(prevState => ({
     									totalRowsProcessed : parseInt(prevState.totalRowsProcessed) + parseInt(rowsProcessed),
     									totalEvents : parseInt(prevState.totalEvents) + 1,
-    									queryAlerts : parseInt(rowsProcessed) > 40 ? parseInt(prevState.queryAlerts) + 1 : parseInt(prevState.queryAlerts),
-    									anomalies : parseInt(rowsProcessed) > 100 ? parseInt(prevState.anomalies) + 1 : parseInt(prevState.anomalies)
+    									queryAlerts : parseInt(rowsProcessed) > 400 ? parseInt(prevState.queryAlerts) + 1 : parseInt(prevState.queryAlerts),
+    									anomalies : parseInt(rowsProcessed) > 490 ? parseInt(prevState.anomalies) + 1 : parseInt(prevState.anomalies)
     								})
 	    );
 	},

@@ -48,7 +48,7 @@ public class EMPServiceConnector {
 			
 			if(connector != null) {
 				connector.start().get(5, TimeUnit.SECONDS);
-		        topic = connector.subscribe(config.getTopic(), EmpConnector.REPLAY_FROM_TIP, streamConsumer);
+		        topic = connector.subscribe(config.getTopic(), -1L, streamConsumer);
 		        topic.get(5, TimeUnit.SECONDS);				
 			}
 	        

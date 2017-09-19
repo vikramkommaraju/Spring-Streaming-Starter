@@ -28,13 +28,16 @@ public class StreamingMonitor {
 	@Autowired
 	private ConfigurableApplicationContext ctx;
 	
+	private boolean isSubscribed;
+	
 	public boolean begin() {
 		boolean result = true;
 		try {
 			System.out.println("Open stream...");
-			empService.stop();
-			Thread.sleep(1000);
-			empService.start(streamConsumer);
+			//empService.stop();
+			Thread.sleep(3000);
+			//empService.start(streamConsumer);
+			isSubscribed = true;
 			System.out.println("Successfully started stream");
 		} catch (Exception e) {
 			result = false;
@@ -44,7 +47,12 @@ public class StreamingMonitor {
 		return result;
 	}
 	
+	public boolean isSubscribed() {
+		return this.isSubscribed;
+	}
+	
 	public void end() {
+		isSubscribed = false;
 		empService.stop();
 	}
 	

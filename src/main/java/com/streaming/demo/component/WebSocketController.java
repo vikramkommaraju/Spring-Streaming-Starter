@@ -10,6 +10,9 @@ import org.springframework.stereotype.Controller;
 public class WebSocketController {
 
 	@Autowired
+	EventGeneratorTaskManager taskManager;
+	
+	@Autowired
 	StreamingMonitor streamMonitor;
 	
 	@Autowired
@@ -17,23 +20,35 @@ public class WebSocketController {
 
     @MessageMapping("/messages")
     @SendTo("/topic/subscription")
-    public SubscribeMessageResponse connect(SubscribeMessageRequest message) throws Exception {
-        System.out.println("Received command " + message.getCommand());
-        if("subscribe".equalsIgnoreCase(message.getCommand())) {
+    public WebSocketMessageResponse connect(WebSocketMessageRequest message) throws Exception {
+        
+    		if("subscribe".equalsIgnoreCase(message.getCommand())) {
 
             if(streamMonitor.begin()) {
-            		return new SubscribeMessageResponse("subscribe-success");
+            		return new WebSocketMessageResponse("subscribe-success");
 	        } else {
-	        		return new SubscribeMessageResponse("subscribe-failed");  
+	        		return new WebSocketMessageResponse("subscribe-failed");  
 	        }
 
-        } else {
+        } else if("unsubscribe".equalsIgnoreCase(message.getCommand())){
         		streamMonitor.end();
-        		return new SubscribeMessageResponse("unsubscribe-success");
-        }
+        		taskManager.stopGeneratorTask();
+        		return new WebSocketMessageResponse("unsubscribe-success");
+        		
+        } else if("start".equalsIgnoreCase(message.getCommand())) {
+
+            System.out.println("Start generating events!");
+            taskManager.startGeneratorTask();
+            return new WebSocketMessageResponse("started");
+
+        } else {
+        		System.out.println("Stop generating events!");
+        		taskManager.stopGeneratorTask();
+        		return new WebSocketMessageResponse("stopped");
+        }    
         
     }
-    
+  
     public void sendEventNotification(QueryAlert__C alert) {
     		try {
     				String entityName = alert.getQueriedEntity();

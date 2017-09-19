@@ -114,9 +114,7 @@ var StreamingPanel = React.createClass({
 		} 
 		else if(result == 'subscribe-failed') {
 			self.setState({status: "Failed", label: "Subscribe", style: "success", disabled: false});
-		} else {
-			self.setState({status: "Disconnected", label: "Subscribe", style: "success", disabled: false});						
-		}
+		} 
 			
 	},
 

@@ -24,7 +24,8 @@ var config = {
 			'node_modules/bootstrap/dist/css/bootstrap-theme.min.css',
 			'node_modules/react-toastify/dist/ReactToastify.min.css'
 		],
-		fonts: 'node_modules/font-awesome/fonts/fontawesome-webfont.*',
+		fonts: ['node_modules/font-awesome/fonts/fontawesome-webfont.*',
+			'node_modules/bootstrap/fonts/glyphicons*'],
 		mainJs: './src/main/resources/static/js/main.js',
 		dist: './src/main/resources/static/dist',
 	},
