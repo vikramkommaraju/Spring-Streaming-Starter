@@ -65050,7 +65050,7 @@ var NavSidebar = React.createClass({displayName: "NavSidebar",
 		                    React.createElement("ul", {className: "nav", id: "side-menu"}, 
 		                        React.createElement("li", {className: "sidebar-search"}, 
 		                            React.createElement("div", {className: "input-group custom-search-form"}, 
-		                                React.createElement("input", {type: "text", className: "form-control", placeholder: "Search..."}), 
+		                                React.createElement("input", {type: "text", className: "form-control no-cursor", placeholder: "Search..."}), 
 		                                React.createElement("span", {className: "input-group-btn"}, 
 		                                React.createElement("button", {className: "btn btn-default", type: "button"}, 
 		                                    React.createElement("i", {className: "fa fa-search"})
@@ -65059,11 +65059,11 @@ var NavSidebar = React.createClass({displayName: "NavSidebar",
 		                            )
 		                        ), 
 		                        React.createElement("li", null, 
-		                            React.createElement("a", null, React.createElement("i", {className: "fa fa-dashboard fa-fw"}), " Dashboard")
+		                            React.createElement("a", {className: "no-cursor"}, React.createElement("i", {className: "fa fa-dashboard fa-fw"}), " Dashboard")
 		                        ), 
 		                        
 		                       React.createElement("li", null, 
-		                            React.createElement("a", null, React.createElement("i", {className: "fa fa-gear fa-fw"}), " Settings")
+		                            React.createElement("a", {className: "no-cursor"}, React.createElement("i", {className: "fa fa-gear fa-fw"}), " Settings")
 		                        ), 
 		                        React.createElement("li", null
 		                        )

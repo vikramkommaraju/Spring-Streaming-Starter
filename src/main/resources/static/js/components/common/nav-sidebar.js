@@ -13,7 +13,7 @@ var NavSidebar = React.createClass({
 		                    <ul className="nav" id="side-menu">
 		                        <li className="sidebar-search">
 		                            <div className="input-group custom-search-form">
-		                                <input type="text" className="form-control" placeholder="Search..." />
+		                                <input type="text" className="form-control no-cursor" placeholder="Search..." />
 		                                <span className="input-group-btn">
 		                                <button className="btn btn-default" type="button">
 		                                    <i className="fa fa-search"></i>
@@ -22,11 +22,11 @@ var NavSidebar = React.createClass({
 		                            </div>
 		                        </li>
 		                        <li>
-		                            <a><i className="fa fa-dashboard fa-fw"></i> Dashboard</a>
+		                            <a className="no-cursor"><i className="fa fa-dashboard fa-fw"></i> Dashboard</a>
 		                        </li>
 		                        
 		                       <li>
-		                            <a><i className="fa fa-gear fa-fw"></i> Settings</a>
+		                            <a className="no-cursor"><i className="fa fa-gear fa-fw"></i> Settings</a>
 		                        </li>
 		                        <li>
 		                        </li>

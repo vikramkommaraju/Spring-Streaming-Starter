@@ -19,6 +19,7 @@
     "gulp-connect": "^2.3.1",
     "gulp-eslint": "^0.15.0",
     "gulp-open": "^1.0.0",
+    "http-parser-js": "^0.4.6",
     "jquery": "^2.1.4",
     "lodash": "^4.17.4",
     "pubsub-js": "^1.5.7",

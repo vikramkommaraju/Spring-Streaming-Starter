@@ -41,6 +41,10 @@
 	color: #0a5b17;
 }
 
+.no-cursor {
+	cursor: not-allowed;
+}
+
 .status-icon {
 	padding-left: 0.1cm;
 	padding-right: 0.5cm; 
