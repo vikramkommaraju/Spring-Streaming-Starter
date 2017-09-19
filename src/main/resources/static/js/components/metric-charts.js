@@ -193,7 +193,7 @@ var MetricCharts = React.createClass({
 					<MetricChart label="Entities Queried" data={this.state.eventCountChart} options={chartOptions}/>
 					<MetricChart label="Rows Processed" data={this.state.rowsCountChart} options={chartOptions}/>
 					<MetricChart label="Query Alerts" data={this.state.queryCountChart} options={chartOptions}/>
-					<MetricChart label="Anomalies" data={this.state.anomaliesCountChart} options={chartOptions}/>					
+					<MetricChart label="High Volume Queries" data={this.state.anomaliesCountChart} options={chartOptions}/>					
 				</div>
 		);
 	}
