@@ -2,6 +2,7 @@ package com.streaming.demo.component;
 
 import static com.salesforce.emp.connector.LoginHelper.login;
 
+import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -35,26 +36,36 @@ public class EMPServiceConnector {
 	private EmpConnector connector;
 	private Future<TopicSubscription> topic;
 	
-	@PostConstruct
-	public void init() {
+	public boolean start(Consumer<Map<String, Object>> streamConsumer) {	
+		boolean result = true;
 		try {
-			params = login(config.getUserName(), config.getPassword());
-			connector = new EmpConnector(params);
+			if(params == null) {
+				System.out.println("Logging into org using " + config.getUserName());
+				params = login(new URL(config.getServerUrl()), config.getUserName(), config.getPassword());
+				System.out.println("Login success.");
+				connector = new EmpConnector(params);
+			}
+			
+			if(connector != null) {
+				connector.start().get(5, TimeUnit.SECONDS);
+		        topic = connector.subscribe(config.getTopic(), EmpConnector.REPLAY_FROM_TIP, streamConsumer);
+		        topic.get(5, TimeUnit.SECONDS);				
+			}
+	        
 		} catch (Exception e) {
 			logger.log("Failed to login to the org! " + e.getMessage());
-			ctx.close();
+			result=false;
 		}	
-	}
-	
-	public void start(Consumer<Map<String, Object>> streamConsumer) throws InterruptedException, ExecutionException, TimeoutException {	
-		connector.start().get(5, TimeUnit.SECONDS);
-        topic = connector.subscribe(config.getTopic(), EmpConnector.REPLAY_FROM_TIP, streamConsumer);
-        topic.get(5, TimeUnit.SECONDS);
+		
+		return result;
+		
 	}
 	
 	public void stop() {
-		System.out.println("Closing stream");
-		connector.stop();
+		
+		if(connector != null) {
+			connector.stop();			
+		}
 	}
 }
 

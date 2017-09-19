@@ -65160,6 +65160,8 @@ var Link = Router.Link;
 var StreamingPanel = require('./streamingPanel');
 var MetricsDashboard = require('./metrics-dashboard');
 var NotificationsPanel = require('./notifications-panel');
+var MetricCharts = require('./metric-charts');
+
 
 const PageHeader = (props) => {
 	return (
@@ -65189,6 +65191,9 @@ var Home = React.createClass({displayName: "Home",
 		            React.createElement("div", {className: "row"}, 
 		                React.createElement(StreamingPanel, null), 
 		                React.createElement(NotificationsPanel, null)
+		            ), 
+		            React.createElement("div", {className: "row"}, 
+		                React.createElement(MetricCharts, null)
 		            )
 		        )
 		);
@@ -65197,7 +65202,211 @@ var Home = React.createClass({displayName: "Home",
 
 module.exports = Home;
 
-},{"./metrics-dashboard":512,"./notifications-panel":517,"./streamingPanel":519,"react":436,"react-router":379}],512:[function(require,module,exports){
+},{"./metric-charts":512,"./metrics-dashboard":513,"./notifications-panel":518,"./streamingPanel":520,"react":436,"react-router":379}],512:[function(require,module,exports){
+"use strict";
+
+var React = require('react');
+var Router = require('react-router');
+var Link = Router.Link;
+var Doughnut = require('react-chartjs-2').Doughnut;
+var PubSub = require('pubsub-js');
+
+var ConnectionService = require('./connectionService');
+var topic = "/topic/events";
+
+var chartOptions = {
+	responsive: true,
+	legend : {
+		display : false,
+		position : 'bottom',
+		labels : []
+	}
+};
+
+var chartData = {
+	
+	labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [{
+            label: "My First dataset",
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [0, 10, 5, 2, 20, 30, 45],
+        }]
+};
+
+const MetricChart = (props) => {
+
+	return(
+			React.createElement("div", {className: "col-md-3"}, 
+	            React.createElement("div", {className: "panel panel-default"}, 
+	                React.createElement("div", {className: "panel-heading"}, 
+	                    React.createElement("i", {className: "fa fa-bar-chart-o fa-fw"}), " ", props.label
+	                ), 
+	                React.createElement("div", {className: "panel-body"}, 
+	                    React.createElement(Doughnut, {data: props.data})
+	                )
+	            )
+			)
+	);
+
+};
+
+var MetricCharts = React.createClass({displayName: "MetricCharts",
+
+	getInitialState: function() {
+		return {
+			apiEventToTotalCount: new Map(),
+			apiEventToQueryCount : new Map(),
+			apiEventToRowsProcessed : new Map(),
+			apiEventToAnomalies : new Map(),
+			eventCountChart : {labels: [], datasets: []},
+			rowsCountChart : {labels: [], datasets: []},
+			queryCountChart : {labels: [], datasets: []},
+			anomaliesCountChart : {labels: [], datasets: []},
+				
+		};
+
+	},
+
+	eventStreamListener : function(response) {
+		var entityName = JSON.parse(response.body).entityName;
+	    var rowsProcessed = JSON.parse(response.body).rowsProcessed;
+
+	    
+
+	    if(rowsProcessed >= 40) {
+			this.setState(prevState => {
+
+											return ({
+
+													apiEventToQueryCount: prevState.apiEventToQueryCount.has(entityName) ? this.state.apiEventToQueryCount.set(entityName, parseInt(this.state.apiEventToQueryCount.get(entityName)) + parseInt(1) ) : this.state.apiEventToQueryCount.set(entityName, parseInt(1)),
+													
+
+											});
+
+    								}
+	    	);	    	
+	    } 
+
+	    if(rowsProcessed >= 100) {
+			this.setState(prevState => {
+
+														return ({
+
+																apiEventToAnomalies: prevState.apiEventToAnomalies.has(entityName) ? this.state.apiEventToAnomalies.set(entityName, parseInt(this.state.apiEventToAnomalies.get(entityName)) + parseInt(1) ) : this.state.apiEventToAnomalies.set(entityName, parseInt(1)),
+													
+
+														});
+
+			    								}
+				    	);	 
+
+
+	    } 
+
+
+	    this.setState(prevState => {
+
+											return ({
+
+													apiEventToTotalCount: prevState.apiEventToTotalCount.has(entityName) ? this.state.apiEventToTotalCount.set(entityName, parseInt(this.state.apiEventToTotalCount.get(entityName)) + parseInt(1) ) : this.state.apiEventToTotalCount.set(entityName, parseInt(1)),
+													apiEventToRowsProcessed: prevState.apiEventToRowsProcessed.has(entityName) ? this.state.apiEventToRowsProcessed.set(entityName, parseInt(this.state.apiEventToRowsProcessed.get(entityName)) + parseInt(rowsProcessed) ) : this.state.apiEventToRowsProcessed.set(entityName, parseInt(rowsProcessed)),
+													eventCountChart : { labels: Array.from(this.state.apiEventToTotalCount.keys()), 
+					    												 datasets: [{
+					    												 				backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "red"],
+					          															data : Array.from(this.state.apiEventToTotalCount.values())
+					    												 			}]
+    																	},
+    												rowsCountChart : { labels: Array.from(this.state.apiEventToRowsProcessed.keys()), 
+					    												 datasets: [{
+					    												 				backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "red"],
+					          															data : Array.from(this.state.apiEventToRowsProcessed.values())
+					    												 			}]
+    																	},
+    												queryCountChart : { labels: Array.from(this.state.apiEventToQueryCount.keys()), 
+					    												 datasets: [{
+					    												 				backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "red"],
+					          															data : Array.from(this.state.apiEventToQueryCount.values())
+					    												 			}]
+    																	},
+    												anomaliesCountChart : { labels: Array.from(this.state.apiEventToAnomalies.keys()), 
+					    												 datasets: [{
+					    												 				backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "red"],
+					          															data : Array.from(this.state.apiEventToAnomalies.values())
+					    												 			}]
+    																	},
+
+											});
+
+    								}
+	    	);	
+
+	  
+
+	    // this.setState(prevState => {
+
+					// 						return ({
+
+					// 								apiEventToTotalCount: prevState.apiEventToTotalCount.has(entityName) ? this.state.apiEventToTotalCount.set(entityName, parseInt(this.state.apiEventToTotalCount.get(entityName)) + parseInt(1) ) : this.state.apiEventToTotalCount.set(entityName, parseInt(1)),
+					// 								apiEventToRowsProcessed: prevState.apiEventToRowsProcessed.has(entityName) ? this.state.apiEventToRowsProcessed.set(entityName, parseInt(this.state.apiEventToRowsProcessed.get(entityName)) + parseInt(rowsProcessed) ) : this.state.apiEventToRowsProcessed.set(entityName, parseInt(rowsProcessed)),
+					// 								eventCountChart : chartData,
+					// 								rowsCountChart : { labels: Array.from(this.state.apiEventToRowsProcessed.keys()), 
+					//     												 datasets: [{
+					//     												 				backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "red"],
+					//           															data : Array.from(this.state.apiEventToRowsProcessed.values())
+					//     												 			}]
+    	// 																},
+    	// 											queryCountChart : { labels: Array.from(this.state.apiEventToQueryCount.keys()), 
+					//     												 datasets: [{
+					//     												 				backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "red"],
+					//           															data : Array.from(this.state.apiEventToQueryCount.values())
+					//     												 			}]
+    	// 																},
+    	// 											anomaliesCountChart : { labels: Array.from(this.state.anomaliesCountChart.keys()), 
+					//     												 datasets: [{
+					//     												 				backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "red"],
+					//           															data : Array.from(this.state.anomaliesCountChart.values())
+					//     												 			}]
+    	// 																},
+
+
+					// 						});
+
+    	// 							}
+	    // 	);	 
+	   
+
+
+	    //Set chart states
+	    console.log("Event query labels: " + Array.from(this.state.apiEventToRowsProcessed.keys()));
+	   // console.log("Event chart data: " + this.state.eventCountChart.datasets);
+	    
+	      
+	},
+
+	pubSubCallback : function() {
+		ConnectionService.register(topic, this.eventStreamListener);
+	},
+
+	componentWillMount: function() {
+		PubSub.subscribe( 'Subsription-Status', this.pubSubCallback );
+	},
+
+	render: function() {
+		return (
+				React.createElement("div", null, 
+					React.createElement(MetricChart, {label: "Entities Queried", data: this.state.eventCountChart, options: chartOptions}), 
+					React.createElement(MetricChart, {label: "Rows Processed", data: this.state.rowsCountChart, options: chartOptions}), 
+					React.createElement(MetricChart, {label: "Query Alerts", data: this.state.queryCountChart, options: chartOptions}), 
+					React.createElement(MetricChart, {label: "Anomalies", data: this.state.anomaliesCountChart, options: chartOptions})					
+				)
+		);
+	}
+});
+
+module.exports = MetricCharts;
+
+},{"./connectionService":509,"pubsub-js":203,"react":436,"react-chartjs-2":204,"react-router":379}],513:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -65250,9 +65459,7 @@ var MetricsDashboard = React.createClass({displayName: "MetricsDashboard",
 		var entityName = JSON.parse(response.body).entityName;
 	    var rowsProcessed = JSON.parse(response.body).rowsProcessed;
 
-	    if(rowsProcessed >= 20) {
-	    	PubSub.publish('Event-Notification', {'entityName' : entityName, 'rowsProcessed' : rowsProcessed});	    	
-	    }
+	    PubSub.publish('Event-Notification', {'entityName' : entityName, 'rowsProcessed' : rowsProcessed});
 	    
 	    this.setState(prevState => ({
     									totalRowsProcessed : parseInt(prevState.totalRowsProcessed) + parseInt(rowsProcessed),
@@ -65285,7 +65492,7 @@ var MetricsDashboard = React.createClass({displayName: "MetricsDashboard",
 
 module.exports = MetricsDashboard;
 
-},{"./connectionService":509,"pubsub-js":203,"react":436,"react-router":379}],513:[function(require,module,exports){
+},{"./connectionService":509,"pubsub-js":203,"react":436,"react-router":379}],514:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -65337,7 +65544,7 @@ const Dashboard = (props) => {
 
 module.exports = Dashboard;
 
-},{"react":436,"react-chartjs-2":204}],514:[function(require,module,exports){
+},{"react":436,"react-chartjs-2":204}],515:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -65538,7 +65745,7 @@ var Monitor = React.createClass({displayName: "Monitor",
 
 module.exports = Monitor;
 
-},{"./dashboard":513,"./notifService":515,"react":436,"sockjs-client":438,"stompjs":494}],515:[function(require,module,exports){
+},{"./dashboard":514,"./notifService":516,"react":436,"sockjs-client":438,"stompjs":494}],516:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -65574,7 +65781,7 @@ var NotifService = React.createClass({displayName: "NotifService",
 
 module.exports = NotifService;
 
-},{"react":436,"react-router":379,"react-toastify":400}],516:[function(require,module,exports){
+},{"react":436,"react-router":379,"react-toastify":400}],517:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -65594,7 +65801,7 @@ var NotFoundPage = React.createClass({displayName: "NotFoundPage",
 
 module.exports = NotFoundPage;
 
-},{"react":436,"react-router":379}],517:[function(require,module,exports){
+},{"react":436,"react-router":379}],518:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -65625,6 +65832,10 @@ var NotificationsPanel = React.createClass({displayName: "NotificationsPanel",
 
     eventNotification: function(msg, data) {
 
+        if(data.rowsProcessed < 40) {
+            return;
+        }
+
         this.setState((prevState) => {
                                        prevState.entries.unshift({rowsProcessed: data.rowsProcessed, entityName: data.entityName});
                                        return { entries : prevState.entries };
@@ -65646,7 +65857,7 @@ var NotificationsPanel = React.createClass({displayName: "NotificationsPanel",
 
     componentWillMount: function() {
         PubSub.subscribe( 'Event-Notification', this.eventNotification );
-        setInterval(this.notificationCleaner, 1000);
+        setInterval(this.notificationCleaner, 100);
     },
 
     render : function() {
@@ -65675,7 +65886,7 @@ var NotificationsPanel = React.createClass({displayName: "NotificationsPanel",
 
 module.exports = NotificationsPanel;
 
-},{"pubsub-js":203,"react":436,"react-router":379}],518:[function(require,module,exports){
+},{"pubsub-js":203,"react":436,"react-router":379}],519:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -65710,6 +65921,7 @@ var chartOptions = {
                                 beginAtZero: true,
                                 steps: 10,
                                 stepValue: 5,
+                                max: 100
                             }
                         }]
     }
@@ -65731,7 +65943,7 @@ const StreamingChart = (props) => {
 
 module.exports = StreamingChart;
 
-},{"react":436,"react-chartjs-2":204}],519:[function(require,module,exports){
+},{"react":436,"react-chartjs-2":204}],520:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -65845,6 +66057,9 @@ var StreamingPanel = React.createClass({displayName: "StreamingPanel",
 			self.setState({status: "Connected", label: "Disconnect", style: "warning", disabled: false});
 			ConnectionService.register("/topic/events", self.eventStreamListener);
 			PubSub.publishSync( 'Subsription-Status', 'Success' );			
+		} 
+		else if(result == 'subscribe-failed') {
+			self.setState({status: "Failed", label: "Subscribe", style: "success", disabled: false});
 		} else {
 			self.setState({status: "Disconnected", label: "Subscribe", style: "success", disabled: false});						
 		}
@@ -65911,7 +66126,7 @@ var StreamingPanel = React.createClass({displayName: "StreamingPanel",
 
 module.exports = StreamingPanel;
 
-},{"./connectionService":509,"./streaming-chart":518,"pubsub-js":203,"react":436,"react-router":379}],520:[function(require,module,exports){
+},{"./connectionService":509,"./streaming-chart":519,"pubsub-js":203,"react":436,"react-router":379}],521:[function(require,module,exports){
 "use strict";
 var React = require('react');
 var ReactDOM = require('react-dom');
@@ -65922,7 +66137,7 @@ Router.run(routes, Router.HistoryLocation, function(Handler) {
 	ReactDOM.render(React.createElement(Handler, null), document.getElementById('app'));
 });
 
-},{"./routes":521,"react":436,"react-dom":205,"react-router":379}],521:[function(require,module,exports){
+},{"./routes":522,"react":436,"react-dom":205,"react-router":379}],522:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -65944,4 +66159,4 @@ var routes = (
 
 module.exports = routes;
 
-},{"./components/about/aboutPage":503,"./components/app":504,"./components/debug/debugPage":510,"./components/homePage":511,"./components/monitor/monitorPage":514,"./components/notFoundPage":516,"react":436,"react-router":379}]},{},[520]);
+},{"./components/about/aboutPage":503,"./components/app":504,"./components/debug/debugPage":510,"./components/homePage":511,"./components/monitor/monitorPage":515,"./components/notFoundPage":517,"react":436,"react-router":379}]},{},[521]);

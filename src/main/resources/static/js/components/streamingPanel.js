@@ -111,6 +111,9 @@ var StreamingPanel = React.createClass({
 			self.setState({status: "Connected", label: "Disconnect", style: "warning", disabled: false});
 			ConnectionService.register("/topic/events", self.eventStreamListener);
 			PubSub.publishSync( 'Subsription-Status', 'Success' );			
+		} 
+		else if(result == 'subscribe-failed') {
+			self.setState({status: "Failed", label: "Subscribe", style: "success", disabled: false});
 		} else {
 			self.setState({status: "Disconnected", label: "Subscribe", style: "success", disabled: false});						
 		}

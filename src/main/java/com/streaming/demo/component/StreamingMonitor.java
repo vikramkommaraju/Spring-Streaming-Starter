@@ -31,11 +31,15 @@ public class StreamingMonitor {
 	public boolean begin() {
 		boolean result = true;
 		try {
+			System.out.println("Open stream...");
 			empService.stop();
 			Thread.sleep(1000);
 			empService.start(streamConsumer);
-		} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			System.out.println("Successfully started stream");
+		} catch (Exception e) {
 			result = false;
+			System.out.println("Failed to open stream for config [ " + config + "Reason: " + e.getMessage());
+			e.printStackTrace();
 		}
 		return result;
 	}

@@ -6,6 +6,8 @@ var Link = Router.Link;
 var StreamingPanel = require('./streamingPanel');
 var MetricsDashboard = require('./metrics-dashboard');
 var NotificationsPanel = require('./notifications-panel');
+var MetricCharts = require('./metric-charts');
+
 
 const PageHeader = (props) => {
 	return (
@@ -35,6 +37,9 @@ var Home = React.createClass({
 		            <div className="row">
 		                <StreamingPanel />
 		                <NotificationsPanel />
+		            </div>
+		            <div className="row">
+		                <MetricCharts />
 		            </div>
 		        </div>
 		);

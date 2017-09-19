@@ -55,5 +55,12 @@ public class StreamConfiguration {
 	public String getTopic() {
 		return topic;
 	}
+
+	@Override
+	public String toString() {
+		return "StreamConfiguration [userName=" + userName + ", password=" + password + ", apiVersion=" + apiVersion
+				+ ", serverUrl=" + serverUrl + ", clientKey=" + clientKey + ", clientSecret=" + clientSecret
+				+ ", topic=" + topic + "]";
+	}
 	
 }

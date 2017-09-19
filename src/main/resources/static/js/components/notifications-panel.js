@@ -28,6 +28,10 @@ var NotificationsPanel = React.createClass({
 
     eventNotification: function(msg, data) {
 
+        if(data.rowsProcessed < 40) {
+            return;
+        }
+
         this.setState((prevState) => {
                                        prevState.entries.unshift({rowsProcessed: data.rowsProcessed, entityName: data.entityName});
                                        return { entries : prevState.entries };
@@ -49,7 +53,7 @@ var NotificationsPanel = React.createClass({
 
     componentWillMount: function() {
         PubSub.subscribe( 'Event-Notification', this.eventNotification );
-        setInterval(this.notificationCleaner, 1000);
+        setInterval(this.notificationCleaner, 100);
     },
 
     render : function() {

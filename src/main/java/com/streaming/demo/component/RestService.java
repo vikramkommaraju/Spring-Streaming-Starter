@@ -28,6 +28,7 @@ public class RestService {
 
 	public String login() {
 		String url = buildPostLoginUrl();
+		System.out.println(url);
 		WebResource webResource = client.resource(url);
 		ClientResponse response = webResource.type("application/json").post(ClientResponse.class);
 		String output = response.getEntity(String.class);
