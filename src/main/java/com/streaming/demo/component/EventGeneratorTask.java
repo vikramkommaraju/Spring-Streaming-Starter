@@ -27,7 +27,7 @@ public class EventGeneratorTask implements Runnable {
 	
 	public void generateEvent() {
 		EntityType entity = getRandomEntityType();
-		int limit = ThreadLocalRandom.current().nextInt(5, 50);
+		int limit = ThreadLocalRandom.current().nextInt(5, 1000);
 		restService.query(entity, limit);
 		
 		//Temporary stream consumer logic

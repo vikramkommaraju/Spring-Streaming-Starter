@@ -56,7 +56,7 @@ var MetricsDashboard = React.createClass({
     									totalRowsProcessed : parseInt(prevState.totalRowsProcessed) + parseInt(rowsProcessed),
     									totalEvents : parseInt(prevState.totalEvents) + 1,
     									queryAlerts : parseInt(rowsProcessed) > 400 ? parseInt(prevState.queryAlerts) + 1 : parseInt(prevState.queryAlerts),
-    									anomalies : parseInt(rowsProcessed) > 490 ? parseInt(prevState.anomalies) + 1 : parseInt(prevState.anomalies)
+    									anomalies : parseInt(rowsProcessed) > 800 ? parseInt(prevState.anomalies) + 1 : parseInt(prevState.anomalies)
     								})
 	    );
 	},
@@ -74,8 +74,8 @@ var MetricsDashboard = React.createClass({
 				<div>		                
 		            <MetricCounter label="Total Number of API Events" style="panel-primary" icon="fa-tasks" metric={this.state.totalEvents} />
 		            <MetricCounter label="Avg Number of Rows Queried" style="panel-green" icon="fa-bar-chart" metric={ this.state.totalEvents == 0 ? 0 : ( this.state.totalRowsProcessed / this.state.totalEvents).toFixed(2) } />
-		            <MetricCounter label="Total Number Query Alerts" style="panel-yellow" icon="fa-warning" metric={this.state.queryAlerts}/>
-		            <MetricCounter label="Total Number of Anomalies" style="panel-red" icon="fa-question-circle" metric={this.state.anomalies} />		             
+		            <MetricCounter label="Number Query Alerts" style="panel-yellow" icon="fa-warning" metric={this.state.queryAlerts}/>
+		            <MetricCounter label="High Volume Queries" style="panel-red" icon="fa-question-circle" metric={this.state.anomalies} />		             
 				</div>
 		);
 	}

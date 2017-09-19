@@ -83,7 +83,7 @@ var MetricCharts = React.createClass({
 	    	);	    	
 	    } 
 
-	    if(rowsProcessed >= 490) {
+	    if(rowsProcessed >= 800) {
 			this.setState(prevState => {
 
 														return ({
