@@ -1,1 +1,1 @@
-web java -Dserver.port=$PORT $JAVA_OPTS -cp target/classes com.streaming.demo.configuration.SpringBootWebApplication
+java -jar target/demo-0.0.1-SNAPSHOT.jar
