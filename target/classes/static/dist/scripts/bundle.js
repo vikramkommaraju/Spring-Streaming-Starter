@@ -65185,7 +65185,7 @@ var Home = React.createClass({displayName: "Home",
 	commandListener : function(response) {
 		var self=this;
 		var result = JSON.parse(response.body).content;
-		
+		console.log('Unsubscribed!');
 		if(result == 'unsubscribe-success') { 
 			self.setState({label: 'Start', style: 'success'});
 		}
@@ -65328,7 +65328,7 @@ var MetricCharts = React.createClass({displayName: "MetricCharts",
 	    	);	    	
 	    } 
 
-	    if(rowsProcessed >= 490) {
+	    if(rowsProcessed >= 800) {
 			this.setState(prevState => {
 
 														return ({
@@ -65505,7 +65505,7 @@ var MetricsDashboard = React.createClass({displayName: "MetricsDashboard",
     									totalRowsProcessed : parseInt(prevState.totalRowsProcessed) + parseInt(rowsProcessed),
     									totalEvents : parseInt(prevState.totalEvents) + 1,
     									queryAlerts : parseInt(rowsProcessed) > 400 ? parseInt(prevState.queryAlerts) + 1 : parseInt(prevState.queryAlerts),
-    									anomalies : parseInt(rowsProcessed) > 490 ? parseInt(prevState.anomalies) + 1 : parseInt(prevState.anomalies)
+    									anomalies : parseInt(rowsProcessed) > 800 ? parseInt(prevState.anomalies) + 1 : parseInt(prevState.anomalies)
     								})
 	    );
 	},
@@ -65872,7 +65872,7 @@ var NotificationsPanel = React.createClass({displayName: "NotificationsPanel",
 
     eventNotification: function(msg, data) {
 
-        if(data.rowsProcessed < 40) {
+        if(data.rowsProcessed < 400) {
             return;
         }
 
@@ -65961,7 +65961,7 @@ var chartOptions = {
                                 beginAtZero: true,
                                 steps: 10,
                                 stepValue: 5,
-                                max: 500
+                                max: 1000
                             }
                         }]
     }

@@ -31,7 +31,7 @@ var Home = React.createClass({
 	commandListener : function(response) {
 		var self=this;
 		var result = JSON.parse(response.body).content;
-		
+		console.log('Unsubscribed!');
 		if(result == 'unsubscribe-success') { 
 			self.setState({label: 'Start', style: 'success'});
 		}

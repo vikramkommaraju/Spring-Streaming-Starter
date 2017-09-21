@@ -30,6 +30,9 @@ public class StreamingMonitor {
 	
 	private boolean isSubscribed;
 	
+	/* 
+	 * Uncomment empService.start() to do a real subscribe. And move the publish of event from EventGenratorTask to StreamConsumer
+	 */
 	public boolean begin() {
 		boolean result = true;
 		try {

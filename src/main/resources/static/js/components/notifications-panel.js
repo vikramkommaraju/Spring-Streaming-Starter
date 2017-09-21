@@ -28,7 +28,7 @@ var NotificationsPanel = React.createClass({
 
     eventNotification: function(msg, data) {
 
-        if(data.rowsProcessed < 40) {
+        if(data.rowsProcessed < 400) {
             return;
         }
 

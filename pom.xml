@@ -146,18 +146,14 @@
 	                     </goals>
 	                     <phase>generate-resources</phase>
 	                </execution>
-	                <!-- <execution>
+	                <execution>
 	                     <id>gulp build</id>
 	                     <goals>
 	                         <goal>gulp</goal>
 	                     </goals>
 	                     <phase>generate-resources</phase>
-	                     <configuration>
-					        optional: if not specified, it will run gulp's default
-					        task (and you can remove this whole <configuration> section.)
-					        <arguments>html js css fonts</arguments>
-					    </configuration>
-	                </execution> -->
+	                </execution>
+	                
 	            </executions>
 	         </plugin>
 

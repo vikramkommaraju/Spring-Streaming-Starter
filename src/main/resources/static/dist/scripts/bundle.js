@@ -65185,7 +65185,7 @@ var Home = React.createClass({displayName: "Home",
 	commandListener : function(response) {
 		var self=this;
 		var result = JSON.parse(response.body).content;
-		
+		console.log('Unsubscribed!');
 		if(result == 'unsubscribe-success') { 
 			self.setState({label: 'Start', style: 'success'});
 		}
@@ -65872,7 +65872,7 @@ var NotificationsPanel = React.createClass({displayName: "NotificationsPanel",
 
     eventNotification: function(msg, data) {
 
-        if(data.rowsProcessed < 40) {
+        if(data.rowsProcessed < 400) {
             return;
         }
 
